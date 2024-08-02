@@ -1,0 +1,31 @@
+mysql:
+  image:
+    repository: mysql
+    tag: "5.7"
+  mysqlRootPassword: "admin"
+  mysqlDatabase: "pyapplicationdb"
+  mysqlUser: "admin"
+  mysqlPassword: "admin@123"
+
+# Values for the Flask application
+flaskApp:
+  image:
+    repository: shaivin/flask-app
+    tag: "project" # Change this if you have a specific tag
+  service:
+    port: 5000
+    targetPort: 5000
+
+# ConfigMap data for MySQL initialization
+mysqlInit:
+  initSql: |
+    CREATE DATABASE IF NOT EXISTS pyapplicationdb;
+    USE pyapplicationdb;
+    CREATE USER 'admin'@'%' IDENTIFIED BY 'admin@123';
+    GRANT ALL PRIVILEGES ON pyapplicationdb.* TO 'admin'@'%';
+    FLUSH PRIVILEGES;
+    CREATE TABLE IF NOT EXISTS random_words (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      word VARCHAR(255) NOT NULL
+    );
+    INSERT INTO random_words (word) VALUES ('example');
